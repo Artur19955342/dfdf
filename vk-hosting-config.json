@@ -1,0 +1,7 @@
+{
+  "app_id": 0,
+  "scope": "menu,friends",
+  "access_token": "YOUR_VK_ACCESS_TOKEN",
+  "environment": "production",
+  "uploadURL": "YOUR_UPLOAD_URL"
+}

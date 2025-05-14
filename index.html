@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Case Viewer</title>
+    <link rel="stylesheet" href="https://unpkg.com/@vkontakte/vkui@4.39.1/dist/vkui.css" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Home/Grid View (Initially Visible) -->
+        <div id="grid-view" class="panel">
+            <div class="panel__content">
+                <div id="cases-grid" class="cases-grid">
+                    <!-- Cases will be populated here dynamically -->
+                </div>
+                <div id="loading-grid" class="loading-spinner"></div>
+            </div>
+        </div>
+
+        <!-- Case Detail View (Initially Hidden) -->
+        <div id="case-view" class="panel hidden">
+            <div class="panel__header">
+                <button id="back-button" class="back-button">← Back</button>
+                <h1 id="case-title" class="panel__title">Case Title</h1>
+                <div id="loading-case" class="loading-spinner hidden"></div>
+            </div>
+            
+            <div class="panel__content">
+                <!-- Case Navigation -->
+                <div class="part-navigation">
+                    <button id="prev-part" class="part-nav-button">◀</button>
+                    <div id="part-indicator">Part 1: Sequences</div>
+                    <button id="next-part" class="part-nav-button">▶</button>
+                </div>
+
+                <!-- Part 1: Sequences and Annotation -->
+                <div id="part-sequences" class="case-part">
+                    <div class="series-selector-container">
+                        <select id="series-selector">
+                            <!-- Series options will be dynamically populated -->
+                        </select>
+                    </div>
+                    
+                    <div class="image-container">
+                        <img id="sequence-image" src="" alt="Medical Image" />
+                    </div>
+                    
+                    <div class="slider-container">
+                        <button id="prev-image" disabled>Previous</button>
+                        <input type="range" id="image-slider" min="1" max="100" value="1" disabled>
+                        <button id="next-image" disabled>Next</button>
+                    </div>
+                    
+                    <div class="info-panel">
+                        <div id="image-info">Image: 0 / 0</div>
+                        <div id="series-info">Series: -</div>
+                    </div>
+
+                    <div class="annotation-container">
+                        <h3>Case Annotation</h3>
+                        <div id="case-annotation" class="annotation-text">
+                            Loading annotation...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 2: Results -->
+                <div id="part-results" class="case-part hidden">
+                    <div class="image-container">
+                        <img id="result-image" src="" alt="Result Image" />
+                    </div>
+                    
+                    <div class="slider-container">
+                        <button id="prev-result" disabled>Previous</button>
+                        <input type="range" id="result-slider" min="1" max="100" value="1" disabled>
+                        <button id="next-result" disabled>Next</button>
+                    </div>
+                    
+                    <div class="info-panel">
+                        <div id="result-info">Result: 0 / 0</div>
+                    </div>
+
+                    <div class="result-text-container">
+                        <h3>Result Description</h3>
+                        <div id="result-text" class="result-text">
+                            Loading result description...
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Vibration Mode:</label>
+                        <select id="vibration-mode">
+                            <option value="none">None</option>
+                            <option value="light">Light</option>
+                            <option value="medium">Medium</option>
+                            <option value="strong">Strong</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include VK Bridge (with local fallback) -->
+    <script>
+        // Check if we're running locally
+        const isLocalDevelopment = window.location.hostname === 'localhost' || 
+                                   window.location.hostname === '127.0.0.1';
+        
+        // If running locally, use the mock bridge
+        if (isLocalDevelopment) {
+            document.write('<script src="mock-vk-bridge.js"><\/script>');
+        } else {
+            document.write('<script src="https://unpkg.com/@vkontakte/vk-bridge@2.7.2/dist/index.umd.js"><\/script>');
+        }
+    </script>
+    <script src="vk-cloud-helpers.js"></script>
+    <script src="app.js"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Case Viewer</title>
+    <link rel="stylesheet" href="https://unpkg.com/@vkontakte/vkui@4.39.1/dist/vkui.css" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Home/Grid View (Initially Visible) -->
+        <div id="grid-view" class="panel">
+            <div class="panel__content">
+                <div id="cases-grid" class="cases-grid">
+                    <!-- Cases will be populated here dynamically -->
+                </div>
+                <div id="loading-grid" class="loading-spinner"></div>
+            </div>
+        </div>
+
+        <!-- Case Detail View (Initially Hidden) -->
+        <div id="case-view" class="panel hidden">
+            <div class="panel__header">
+                <button id="back-button" class="back-button">← Back</button>
+                <h1 id="case-title" class="panel__title">Case Title</h1>
+                <div id="loading-case" class="loading-spinner hidden"></div>
+            </div>
+            
+            <div class="panel__content">
+                <!-- Case Navigation -->
+                <div class="part-navigation">
+                    <button id="prev-part" class="part-nav-button">◀</button>
+                    <div id="part-indicator">Part 1: Sequences</div>
+                    <button id="next-part" class="part-nav-button">▶</button>
+                </div>
+
+                <!-- Part 1: Sequences and Annotation -->
+                <div id="part-sequences" class="case-part">
+                    <div class="series-selector-container">
+                        <select id="series-selector">
+                            <!-- Series options will be dynamically populated -->
+                        </select>
+                    </div>
+                    
+                    <div class="image-container">
+                        <img id="sequence-image" src="" alt="Medical Image" />
+                    </div>
+                    
+                    <div class="slider-container">
+                        <button id="prev-image" disabled>Previous</button>
+                        <input type="range" id="image-slider" min="1" max="100" value="1" disabled>
+                        <button id="next-image" disabled>Next</button>
+                    </div>
+                    
+                    <div class="info-panel">
+                        <div id="image-info">Image: 0 / 0</div>
+                        <div id="series-info">Series: -</div>
+                    </div>
+
+                    <div class="annotation-container">
+                        <h3>Case Annotation</h3>
+                        <div id="case-annotation" class="annotation-text">
+                            Loading annotation...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 2: Results -->
+                <div id="part-results" class="case-part hidden">
+                    <div class="image-container">
+                        <img id="result-image" src="" alt="Result Image" />
+                    </div>
+                    
+                    <div class="slider-container">
+                        <button id="prev-result" disabled>Previous</button>
+                        <input type="range" id="result-slider" min="1" max="100" value="1" disabled>
+                        <button id="next-result" disabled>Next</button>
+                    </div>
+                    
+                    <div class="info-panel">
+                        <div id="result-info">Result: 0 / 0</div>
+                    </div>
+
+                    <div class="result-text-container">
+                        <h3>Result Description</h3>
+                        <div id="result-text" class="result-text">
+                            Loading result description...
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Vibration Mode:</label>
+                        <select id="vibration-mode">
+                            <option value="none">None</option>
+                            <option value="light">Light</option>
+                            <option value="medium">Medium</option>
+                            <option value="strong">Strong</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include VK Bridge (with local fallback) -->
+    <script>
+        // Check if we're running locally
+        const isLocalDevelopment = window.location.hostname === 'localhost' || 
+                                   window.location.hostname === '127.0.0.1';
+        
+        // If running locally, use the mock bridge
+        if (isLocalDevelopment) {
+            document.write('<script src="mock-vk-bridge.js"><\/script>');
+        } else {
+            document.write('<script src="https://unpkg.com/@vkontakte/vk-bridge@2.7.2/dist/index.umd.js"><\/script>');
+        }
+    </script>
+    <script src="app.js"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medical Case Viewer</title>
+    <link rel="stylesheet" href="https://unpkg.com/@vkontakte/vkui@4.39.1/dist/vkui.css" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Home/Grid View (Initially Visible) -->
+        <div id="grid-view" class="panel">
+            <div class="panel__header">
+                <h1 class="panel__title">Medical Cases</h1>
+                <div id="loading-grid" class="loading-spinner"></div>
+            </div>
+            
+            <div class="panel__content">
+                <div id="cases-grid" class="cases-grid">
+                    <!-- Cases will be populated here dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Case Detail View (Initially Hidden) -->
+        <div id="case-view" class="panel hidden">
+            <div class="panel__header">
+                <button id="back-button" class="back-button">← Back</button>
+                <h1 id="case-title" class="panel__title">Case Title</h1>
+                <div id="loading-case" class="loading-spinner hidden"></div>
+            </div>
+            
+            <div class="panel__content">
+                <!-- Case Navigation -->
+                <div class="part-navigation">
+                    <button id="prev-part" class="part-nav-button">◀</button>
+                    <div id="part-indicator">Part 1: Sequences</div>
+                    <button id="next-part" class="part-nav-button">▶</button>
+                </div>
+
+                <!-- Part 1: Sequences and Annotation -->
+                <div id="part-sequences" class="case-part">
+                    <div class="series-selector-container">
+                        <select id="series-selector">
+                            <!-- Series options will be dynamically populated -->
+                        </select>
+                    </div>
+                    
+                    <div class="image-container">
+                        <img id="sequence-image" src="" alt="Medical Image" />
+                    </div>
+                    
+                    <div class="slider-container">
+                        <button id="prev-image" disabled>Previous</button>
+                        <input type="range" id="image-slider" min="1" max="100" value="1" disabled>
+                        <button id="next-image" disabled>Next</button>
+                    </div>
+                    
+                    <div class="info-panel">
+                        <div id="image-info">Image: 0 / 0</div>
+                        <div id="series-info">Series: -</div>
+                    </div>
+
+                    <div class="annotation-container">
+                        <h3>Case Annotation</h3>
+                        <div id="case-annotation" class="annotation-text">
+                            Loading annotation...
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Part 2: Results -->
+                <div id="part-results" class="case-part hidden">
+                    <div class="image-container">
+                        <img id="result-image" src="" alt="Result Image" />
+                    </div>
+                    
+                    <div class="slider-container">
+                        <button id="prev-result" disabled>Previous</button>
+                        <input type="range" id="result-slider" min="1" max="100" value="1" disabled>
+                        <button id="next-result" disabled>Next</button>
+                    </div>
+                    
+                    <div class="info-panel">
+                        <div id="result-info">Result: 0 / 0</div>
+                    </div>
+
+                    <div class="result-text-container">
+                        <h3>Result Description</h3>
+                        <div id="result-text" class="result-text">
+                            Loading result description...
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Vibration Mode:</label>
+                        <select id="vibration-mode">
+                            <option value="none">None</option>
+                            <option value="light">Light</option>
+                            <option value="medium">Medium</option>
+                            <option value="strong">Strong</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include VK Bridge (with local fallback) -->
+    <script>
+        // Check if we're running locally
+        const isLocalDevelopment = window.location.hostname === 'localhost' || 
+                                   window.location.hostname === '127.0.0.1';
+        
+        // If running locally, use the mock bridge
+        if (isLocalDevelopment) {
+            document.write('<script src="mock-vk-bridge.js"><\/script>');
+        } else {
+            document.write('<script src="https://unpkg.com/@vkontakte/vk-bridge@2.7.2/dist/index.umd.js"><\/script>');
+        }
+    </script>
+    <script src="app.js"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CT/MRI Image Viewer</title>
+    <link rel="stylesheet" href="https://unpkg.com/@vkontakte/vkui@4.39.1/dist/vkui.css" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <div class="panel">
+            <div class="panel__header">
+                <h1 class="panel__title">CT/MRI Image Viewer</h1>
+                <div id="loading" class="loading-spinner hidden"></div>
+            </div>
+            
+            <div class="panel__content">
+                <div class="image-container">
+                    <img id="medical-image" src="" alt="Medical Image" />
+                </div>
+                
+                <div class="slider-container">
+                    <button id="prev-button" disabled>Previous</button>
+                    <input type="range" id="image-slider" min="1" max="100" value="1" disabled>
+                    <button id="next-button" disabled>Next</button>
+                </div>
+                
+                <div class="info-panel">
+                    <div id="image-info">Image: 0 / 0</div>
+                    <div id="series-info">Series: T1_SAG</div>
+                </div>
+                
+                <div class="controls">
+                    <div class="control-group">
+                        <label>Series:</label>
+                        <select id="series-selector">
+                            <option value="T1_SAG">T1 Sagittal</option>
+                            <option value="T2_SAG">T2 Sagittal</option>
+                            <option value="T1_AX">T1 Axial</option>
+                            <option value="T2_AX">T2 Axial</option>
+                            <option value="FLAIR">FLAIR</option>
+                        </select>
+                    </div>
+                    
+                    <div class="control-group">
+                        <label>Vibration Mode:</label>
+                        <select id="vibration-mode">
+                            <option value="none">None</option>
+                            <option value="light">Light</option>
+                            <option value="medium">Medium</option>
+                            <option value="strong">Strong</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Include VK Bridge (with local fallback) -->
+    <script>
+        // Check if we're running locally
+        const isLocalDevelopment = window.location.hostname === 'localhost' || 
+                                   window.location.hostname === '127.0.0.1';
+        
+        // If running locally, use the mock bridge
+        if (isLocalDevelopment) {
+            document.write('<script src="mock-vk-bridge.js"><\/script>');
+        } else {
+            document.write('<script src="https://unpkg.com/@vkontakte/vk-bridge@2.7.2/dist/index.umd.js"><\/script>');
+        }
+    </script>
+    <script src="app.js"></script>
+</body>
+</html>
